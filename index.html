@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
 
       
-<link rel="stylesheet" href="/Almond_blog/css/custom.css?v=fullbleed-1">
+<link rel="stylesheet" href="/Almond_blog/css/custom.css?v=motion-1">
  
       <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
        
@@ -170,6 +170,7 @@
   </div>
 
   <div class="project-scenes">
+    <div class="scene-progress" aria-hidden="true"><span></span></div>
     <article class="project-scene scene-violet">
       <div class="scene-copy">
         <span class="scene-number">01 / 11</span>
@@ -846,6 +847,66 @@
   if (window.mermaid) {
     mermaid.initialize({ theme: "forest" });
   }
+</script>
+
+<script>
+  (function () {
+    var scenes = Array.prototype.slice.call(document.querySelectorAll('.project-scene'));
+    var progress = document.querySelector('.scene-progress span');
+    if (!scenes.length) return;
+
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.18 });
+      scenes.forEach(function (scene) { observer.observe(scene); });
+    } else {
+      scenes.forEach(function (scene) { scene.classList.add('is-visible'); });
+    }
+
+    var ticking = false;
+    function updateMotion() {
+      var viewport = window.innerHeight || 1;
+      scenes.forEach(function (scene) {
+        var rect = scene.getBoundingClientRect();
+        var shift = Math.max(-34, Math.min(34, (rect.top + rect.height / 2 - viewport / 2) * -0.045));
+        scene.style.setProperty('--scene-shift', shift.toFixed(2) + 'px');
+      });
+      if (progress) {
+        var first = scenes[0].getBoundingClientRect().top;
+        var last = scenes[scenes.length - 1].getBoundingClientRect().bottom;
+        var total = Math.max(1, last - first - window.innerHeight);
+        var travelled = Math.max(0, Math.min(total, -first + window.innerHeight * .18));
+        progress.style.transform = 'scaleY(' + Math.max(.08, travelled / total) + ')';
+      }
+      ticking = false;
+    }
+    function requestMotion() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateMotion);
+        ticking = true;
+      }
+    }
+    window.addEventListener('scroll', requestMotion, { passive: true });
+    window.addEventListener('resize', requestMotion);
+    requestMotion();
+
+    scenes.forEach(function (scene) {
+      scene.addEventListener('pointermove', function (event) {
+        var rect = scene.getBoundingClientRect();
+        var x = ((event.clientX - rect.left) / rect.width - .5) * 2;
+        var y = ((event.clientY - rect.top) / rect.height - .5) * 2;
+        scene.style.setProperty('--pointer-x', (x * 12).toFixed(2) + 'px');
+        scene.style.setProperty('--pointer-y', (y * 12).toFixed(2) + 'px');
+      });
+      scene.addEventListener('pointerleave', function () {
+        scene.style.setProperty('--pointer-x', '0px');
+        scene.style.setProperty('--pointer-y', '0px');
+      });
+    });
+  }());
 </script>
 
 
