@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/Almond_blog/images/almond-mark.svg?v=2">
   <link rel="stylesheet" href="/Almond_blog/dist/main.css">
   <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
-  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-split-2">
+  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-single-page-1">
 </head>
 <body>
   <div id="app">
@@ -20,12 +20,12 @@
         </header>
         <div class="photo-reader-stage" id="photo-reader-stage">
           <div class="reader-book" id="reader-book" aria-live="polite">
-            <canvas id="reader-canvas" role="img" aria-label="摄影作品跨页"></canvas>
+            <canvas id="reader-canvas" role="img" aria-label="摄影作品第 1 页"></canvas>
           </div>
         </div>
         <footer class="photo-reader-controls">
           <button type="button" id="reader-prev" aria-label="上一页">←</button>
-          <span><b id="reader-range">01—02</b><i>/</i><em>78</em></span>
+          <span><b id="reader-range">01</b><i>/</i><em>78</em></span>
           <button type="button" id="reader-next" aria-label="下一页">→</button>
         </footer>
       </section>
@@ -42,11 +42,9 @@
       var range = document.getElementById('reader-range');
       var prev = document.getElementById('reader-prev');
       var next = document.getElementById('reader-next');
-      var mobile = window.matchMedia('(max-width: 760px)');
       prev.disabled = true;
       next.disabled = true;
       function path(index) { return '/Almond_blog/visual-archive/photos/IMG_' + (9518 + index) + '.JPG'; }
-      function step() { return mobile.matches ? 1 : 2; }
       function load(index) {
         return new Promise(function (resolve, reject) {
           var image = new Image();
@@ -56,28 +54,25 @@
         });
       }
       function updateControls() {
-        var size = step(), end = Math.min(start + size - 1, total - 1);
-        range.textContent = mobile.matches ? String(start + 1).padStart(2, '0') : String(start + 1).padStart(2, '0') + '—' + String(end + 1).padStart(2, '0');
+        range.textContent = String(start + 1).padStart(2, '0');
+        canvas.setAttribute('aria-label', '摄影作品第 ' + (start + 1) + ' 页');
         prev.disabled = start === 0;
-        next.disabled = start + size >= total;
+        next.disabled = start + 1 >= total;
       }
       function render() {
-        var size = step();
-        var indexes = mobile.matches ? [start] : [start, Math.min(start + 1, total - 1)];
-        return Promise.all(indexes.map(load)).then(function (images) {
-          var pageWidth = images[0].naturalWidth, pageHeight = images[0].naturalHeight;
-          canvas.width = pageWidth * size;
+        return load(start).then(function (image) {
+          var pageWidth = image.naturalWidth, pageHeight = image.naturalHeight;
+          canvas.width = pageWidth;
           canvas.height = pageHeight;
           context.fillStyle = '#fbfaf8';
           context.fillRect(0, 0, canvas.width, canvas.height);
-          images.forEach(function (image, index) { context.drawImage(image, pageWidth * index, 0, pageWidth, pageHeight); });
+          context.drawImage(image, 0, 0, pageWidth, pageHeight);
           updateControls();
-          var preloadStart = start + size;
-          for (var index = preloadStart; index < preloadStart + size && index < total; index += 1) { load(index); }
+          if (start + 1 < total) load(start + 1);
         });
       }
       function turn(direction) {
-        var size = step(), target = start + (direction === 'next' ? size : -size);
+        var target = start + (direction === 'next' ? 1 : -1);
         if (busy || target < 0 || target >= total) return;
         busy = true;
         var previousStart = start;
@@ -94,8 +89,6 @@
       book.addEventListener('touchstart', function (event) { touchX = event.changedTouches[0].clientX; }, { passive: true });
       book.addEventListener('touchend', function (event) { var delta = event.changedTouches[0].clientX - touchX; if (Math.abs(delta) > 45) turn(delta < 0 ? 'next' : 'prev'); }, { passive: true });
       book.addEventListener('click', function (event) { var rect = book.getBoundingClientRect(); turn(event.clientX > rect.left + rect.width / 2 ? 'next' : 'prev'); });
-      function onViewportChange() { start = Math.floor(start / step()) * step(); render(); }
-      if (mobile.addEventListener) mobile.addEventListener('change', onViewportChange); else mobile.addListener(onViewportChange);
       render();
     }());
   </script>
