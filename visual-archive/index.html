@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/Almond_blog/images/almond-mark.svg?v=2">
   <link rel="stylesheet" href="/Almond_blog/dist/main.css">
   <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
-  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-1">
+  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-2">
 </head>
 <body>
   <div id="app">
@@ -26,15 +26,26 @@
           <button data-filter="video">技术美术 / TECH ART</button>
         </nav>
 
-        <div class="archive-grid">
-          <article class="archive-card archive-card-photo" data-kind="photo">
-            <div class="archive-card-media media-photo-01"><span>PHOTO<br>01</span><i>等待作品上传</i></div>
-            <div class="archive-card-info"><span class="archive-card-index">01 / PHOTO</span><h2>光线与空间</h2><p>城市、室内与自然光的观察记录。</p></div>
-          </article>
-          <article class="archive-card archive-card-photo" data-kind="photo">
-            <div class="archive-card-media media-photo-02"><span>PHOTO<br>02</span><i>等待作品上传</i></div>
-            <div class="archive-card-info"><span class="archive-card-index">02 / PHOTO</span><h2>行走中的片段</h2><p>旅途中被偶然捕捉到的瞬间和质感。</p></div>
-          </article>
+        <section class="photo-book" data-kind="photo" aria-labelledby="photo-book-title">
+          <div class="photo-book-heading">
+            <div><span class="archive-eyebrow">PHOTOGRAPHY / 78 PAGES</span><h2 id="photo-book-title">记着光，也记着走过的地方。</h2></div>
+            <p>按原始顺序整理的摄影作品集。点击左右按钮、键盘方向键，或在手机上滑动页面来翻阅。</p>
+          </div>
+          <div class="book-stage">
+            <div class="book-spread" id="book-spread">
+              <div class="book-page book-page-left"><img id="book-left" alt="摄影作品左页" decoding="async"></div>
+              <div class="book-page book-page-right"><img id="book-right" alt="摄影作品右页" decoding="async"></div>
+              <div class="book-flip" aria-hidden="true"><img id="book-flip-image" alt=""></div>
+            </div>
+          </div>
+          <div class="book-controls">
+            <button type="button" id="book-prev" aria-label="上一页">←</button>
+            <span><b id="book-current">01</b><i>/</i><span id="book-total">78</span></span>
+            <button type="button" id="book-next" aria-label="下一页">→</button>
+          </div>
+        </section>
+
+        <div class="archive-grid tech-cases">
           <article class="archive-card archive-card-video" data-kind="video">
             <div class="archive-card-media media-video-01"><span class="archive-play">▶</span><b>CASE<br>VIDEO 01</b><i>等待案例视频</i></div>
             <div class="archive-card-info"><span class="archive-card-index">01 / TECH ART</span><h2>角色与运行时</h2><p>Live2D、角色表现与技术美术流程案例。</p></div>
@@ -76,6 +87,8 @@
     (function () {
       var buttons = document.querySelectorAll('.archive-filter button');
       var cards = document.querySelectorAll('.archive-card');
+      var photoBook = document.querySelector('.photo-book');
+      var techCases = document.querySelector('.tech-cases');
       buttons.forEach(function (button) {
         button.addEventListener('click', function () {
           buttons.forEach(function (item) { item.classList.remove('is-active'); });
@@ -84,8 +97,65 @@
           cards.forEach(function (card) {
             card.classList.toggle('is-hidden', filter !== 'all' && card.dataset.kind !== filter);
           });
+          photoBook.hidden = filter === 'video';
+          techCases.hidden = filter === 'photo';
         });
       });
+
+      var total = 78;
+      var page = 0;
+      var spread = document.getElementById('book-spread');
+      var left = document.getElementById('book-left');
+      var right = document.getElementById('book-right');
+      var flipImage = document.getElementById('book-flip-image');
+      var current = document.getElementById('book-current');
+      var totalLabel = document.getElementById('book-total');
+      var mobileQuery = window.matchMedia('(max-width: 760px)');
+      totalLabel.textContent = String(total).padStart(2, '0');
+
+      function photoPath(number) {
+        return '/Almond_blog/visual-archive/photos/IMG_' + (9518 + number) + '.JPG';
+      }
+      function isMobile() { return mobileQuery.matches; }
+      function renderBook() {
+        var step = isMobile() ? 1 : 2;
+        var leftPage = isMobile() ? null : page;
+        var rightPage = isMobile() ? page : page + 1;
+        if (leftPage !== null && leftPage < total) left.src = photoPath(leftPage);
+        if (rightPage < total) right.src = photoPath(rightPage);
+        left.hidden = leftPage === null || leftPage >= total;
+        right.hidden = rightPage >= total;
+        current.textContent = String(page + 1).padStart(2, '0');
+        document.getElementById('book-prev').disabled = page <= 0;
+        document.getElementById('book-next').disabled = page + step >= total;
+        var next = page + step;
+        if (next < total) { var preload = new Image(); preload.src = photoPath(next); }
+      }
+      function turn(direction) {
+        var step = isMobile() ? 1 : 2;
+        var next = page + (direction === 'next' ? step : -step);
+        if (next < 0 || next >= total || spread.classList.contains('is-turning')) return;
+        var oldPage = isMobile() ? page : (direction === 'next' ? page + 1 : page);
+        flipImage.src = photoPath(oldPage);
+        spread.className = 'book-spread is-turning is-turning-' + direction;
+        page = next;
+        renderBook();
+        window.setTimeout(function () { spread.className = 'book-spread'; }, 720);
+      }
+      document.getElementById('book-prev').addEventListener('click', function () { turn('prev'); });
+      document.getElementById('book-next').addEventListener('click', function () { turn('next'); });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowLeft') turn('prev');
+        if (event.key === 'ArrowRight') turn('next');
+      });
+      var startX = 0;
+      spread.addEventListener('touchstart', function (event) { startX = event.changedTouches[0].clientX; }, { passive: true });
+      spread.addEventListener('touchend', function (event) {
+        var distance = event.changedTouches[0].clientX - startX;
+        if (Math.abs(distance) > 45) turn(distance < 0 ? 'next' : 'prev');
+      }, { passive: true });
+      mobileQuery.addEventListener('change', renderBook);
+      renderBook();
     }());
   </script>
 </body>

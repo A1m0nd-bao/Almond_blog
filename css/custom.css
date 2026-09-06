@@ -99,6 +99,32 @@
 .archive-card { overflow: hidden; border: 1px solid rgba(33,29,36,.1); background: #fff; box-shadow: 0 1.5rem 4rem rgba(78,56,88,.08); transition: opacity .3s ease, transform .45s cubic-bezier(.2,.75,.2,1), box-shadow .3s ease; }
 .archive-card:hover { box-shadow: 0 2rem 5rem rgba(78,56,88,.16); transform: translateY(-.6rem); }
 .archive-card.is-hidden { display: none; }
+.photo-book[hidden], .tech-cases[hidden] { display: none; }
+.photo-book { max-width: 92rem; margin: 0 auto 8rem; }
+.photo-book-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 3rem; margin-bottom: 2.5rem; }
+.photo-book-heading .archive-eyebrow { margin-bottom: .8rem; }
+.photo-book-heading h2 { margin: 0; color: #302633; font-size: clamp(2.6rem, 5vw, 4.8rem); letter-spacing: -.07em; line-height: 1; }
+.photo-book-heading p { max-width: 28rem; margin: 0; color: #817681; font-size: 1.2rem; line-height: 1.7; }
+.book-stage { padding: 2rem; background: #d8cfc2; box-shadow: inset 0 0 0 1px rgba(50,37,52,.08); }
+.book-spread { position: relative; display: grid; grid-template-columns: 1fr 1fr; width: 100%; aspect-ratio: 1.566; overflow: hidden; background: #fbfaf7; box-shadow: 0 2rem 4rem rgba(53,39,58,.2), 0 0 0 1px rgba(53,39,58,.1); perspective: 160rem; }
+.book-page { position: relative; min-width: 0; overflow: hidden; background: #fbfaf7; }
+.book-page-left { border-right: 1px solid rgba(51,39,51,.12); }
+.book-page img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.book-page:after { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(20,15,23,.08), transparent 12%, transparent 88%, rgba(20,15,23,.06)); content: ''; pointer-events: none; }
+.book-page-right:after { background: linear-gradient(90deg, rgba(20,15,23,.08), transparent 12%); }
+.book-flip { position: absolute; z-index: 3; top: 0; right: 0; bottom: 0; left: 50%; display: none; overflow: hidden; background: #fbfaf7; transform-origin: left center; backface-visibility: hidden; box-shadow: -1rem 0 2rem rgba(20,15,23,.12); }
+.book-flip img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.book-spread.is-turning .book-flip { display: block; }
+.book-spread.is-turning-next .book-flip { animation: book-turn-next .72s cubic-bezier(.2,.72,.2,1) forwards; }
+.book-spread.is-turning-prev .book-flip { right: 50%; left: 0; transform-origin: right center; animation: book-turn-prev .72s cubic-bezier(.2,.72,.2,1) forwards; }
+@keyframes book-turn-next { from { transform: rotateY(0); } to { transform: rotateY(-180deg); } }
+@keyframes book-turn-prev { from { transform: rotateY(0); } to { transform: rotateY(180deg); } }
+.book-controls { display: flex; align-items: center; justify-content: center; gap: 2rem; margin-top: 2rem; color: #887b88; font-family: ui-monospace, monospace; font-size: 1.1rem; }
+.book-controls b { color: #302633; font-size: 1.5rem; }
+.book-controls i { padding: 0 .5rem; color: #b3a6b2; font-style: normal; }
+.book-controls button { display: grid; width: 4rem; height: 4rem; place-items: center; border: 1px solid #c7b8ca; border-radius: 50%; background: transparent; color: #5c4c64; font-size: 1.8rem; transition: .25s ease; }
+.book-controls button:hover:not(:disabled) { border-color: #8769a3; background: #8769a3; color: #fff; transform: scale(1.08); }
+.book-controls button:disabled { cursor: not-allowed; opacity: .3; }
 .archive-card-media { position: relative; display: flex; min-height: 31rem; align-items: center; justify-content: center; overflow: hidden; }
 .archive-card-media:before { position: absolute; inset: 12% 16%; border: 1px solid currentColor; opacity: .25; content: ''; transform: rotate(-8deg); transition: transform .7s ease; }
 .archive-card:hover .archive-card-media:before { transform: rotate(4deg) scale(1.08); }
@@ -127,6 +153,13 @@
   .archive-grid { grid-template-columns: 1fr; }
   .archive-card-media { min-height: 25rem; }
   .archive-upload-note { align-items: flex-start; flex-direction: column; }
+  .photo-book-heading { align-items: flex-start; flex-direction: column; gap: 1.2rem; }
+  .book-stage { padding: 1rem; }
+  .book-spread { display: block; aspect-ratio: .783; }
+  .book-page-left { display: none; }
+  .book-page-right { width: 100%; height: 100%; }
+  .book-flip { right: 0; left: 0; }
+  .book-spread.is-turning-prev .book-flip { right: 0; left: 0; }
 }
 
 /* Project portfolio */
