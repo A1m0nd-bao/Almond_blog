@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="/Almond_blog/images/almond-mark.svg?v=2">
   <link rel="stylesheet" href="/Almond_blog/dist/main.css">
   <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
-  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-split-1">
+  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-split-2">
 </head>
 <body>
   <div id="app">
@@ -20,8 +20,7 @@
         </header>
         <div class="photo-reader-stage" id="photo-reader-stage">
           <div class="reader-book" id="reader-book" aria-live="polite">
-            <div class="reader-page reader-page-left"><img id="reader-left" alt="摄影作品左页" decoding="async"></div>
-            <div class="reader-page reader-page-right"><img id="reader-right" alt="摄影作品右页" decoding="async"></div>
+            <canvas id="reader-canvas" role="img" aria-label="摄影作品跨页"></canvas>
           </div>
         </div>
         <footer class="photo-reader-controls">
@@ -38,37 +37,55 @@
     (function () {
       var total = 78, start = 0, busy = false;
       var book = document.getElementById('reader-book');
-      var left = document.getElementById('reader-left');
-      var right = document.getElementById('reader-right');
+      var canvas = document.getElementById('reader-canvas');
+      var context = canvas.getContext('2d');
       var range = document.getElementById('reader-range');
       var prev = document.getElementById('reader-prev');
       var next = document.getElementById('reader-next');
       var mobile = window.matchMedia('(max-width: 760px)');
+      prev.disabled = true;
+      next.disabled = true;
       function path(index) { return '/Almond_blog/visual-archive/photos/IMG_' + (9518 + index) + '.JPG'; }
       function step() { return mobile.matches ? 1 : 2; }
-      function render() {
+      function load(index) {
+        return new Promise(function (resolve, reject) {
+          var image = new Image();
+          image.onload = function () { resolve(image); };
+          image.onerror = reject;
+          image.src = path(index);
+        });
+      }
+      function updateControls() {
         var size = step(), end = Math.min(start + size - 1, total - 1);
-        if (mobile.matches) {
-          left.hidden = true;
-          right.src = path(start);
-          range.textContent = String(start + 1).padStart(2, '0');
-        } else {
-          left.hidden = false;
-          left.src = path(start);
-          right.src = path(Math.min(start + 1, total - 1));
-          range.textContent = String(start + 1).padStart(2, '0') + '—' + String(end + 1).padStart(2, '0');
-        }
+        range.textContent = mobile.matches ? String(start + 1).padStart(2, '0') : String(start + 1).padStart(2, '0') + '—' + String(end + 1).padStart(2, '0');
         prev.disabled = start === 0;
         next.disabled = start + size >= total;
-        [start + size, start + size + 1].forEach(function (index) { if (index < total) { var image = new Image(); image.src = path(index); } });
+      }
+      function render() {
+        var size = step();
+        var indexes = mobile.matches ? [start] : [start, Math.min(start + 1, total - 1)];
+        return Promise.all(indexes.map(load)).then(function (images) {
+          var pageWidth = images[0].naturalWidth, pageHeight = images[0].naturalHeight;
+          canvas.width = pageWidth * size;
+          canvas.height = pageHeight;
+          context.fillStyle = '#fbfaf8';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          images.forEach(function (image, index) { context.drawImage(image, pageWidth * index, 0, pageWidth, pageHeight); });
+          updateControls();
+          var preloadStart = start + size;
+          for (var index = preloadStart; index < preloadStart + size && index < total; index += 1) { load(index); }
+        });
       }
       function turn(direction) {
         var size = step(), target = start + (direction === 'next' ? size : -size);
         if (busy || target < 0 || target >= total) return;
         busy = true;
-        book.classList.add(direction === 'next' ? 'reader-turn-next' : 'reader-turn-prev');
-        window.setTimeout(function () { start = target; render(); }, 180);
-        window.setTimeout(function () { book.className = 'reader-book'; busy = false; }, 520);
+        var previousStart = start;
+        start = target;
+        render().then(function () {
+          book.classList.add(direction === 'next' ? 'reader-turn-next' : 'reader-turn-prev');
+          window.setTimeout(function () { book.className = 'reader-book'; busy = false; }, 520);
+        }).catch(function () { start = previousStart; updateControls(); busy = false; });
       }
       prev.addEventListener('click', function () { turn('prev'); });
       next.addEventListener('click', function () { turn('next'); });
