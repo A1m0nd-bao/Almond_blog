@@ -326,6 +326,21 @@
   transform: translateY(0) scale(1);
 }
 
+/* Keep the cover image full-bleed when it is served through <picture>. */
+.cover-frame .bg-box > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cover-frame .bg-box > picture > img {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center center;
+}
+
 .project-scene.is-visible .scene-copy > * {
   animation: scene-copy-in .85s both cubic-bezier(.2,.75,.2,1);
 }
