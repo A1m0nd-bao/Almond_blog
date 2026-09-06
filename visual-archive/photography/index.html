@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>摄影作品集 · Almond</title>
+  <link rel="icon" type="image/svg+xml" href="/Almond_blog/images/almond-mark.svg?v=2">
+  <link rel="stylesheet" href="/Almond_blog/dist/main.css">
+  <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
+  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-split-1">
+</head>
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="photo-reader">
+        <header class="photo-reader-bar">
+          <a href="/Almond_blog/visual-archive/" class="reader-back">← 视觉档案</a>
+          <div><span>PHOTOGRAPHY</span><b>记着光，也记着走过的地方。</b></div>
+          <span class="reader-hint">← → / SWIPE</span>
+        </header>
+        <div class="photo-reader-stage" id="photo-reader-stage">
+          <div class="reader-book" id="reader-book" aria-live="polite">
+            <div class="reader-page reader-page-left"><img id="reader-left" alt="摄影作品左页" decoding="async"></div>
+            <div class="reader-page reader-page-right"><img id="reader-right" alt="摄影作品右页" decoding="async"></div>
+          </div>
+        </div>
+        <footer class="photo-reader-controls">
+          <button type="button" id="reader-prev" aria-label="上一页">←</button>
+          <span><b id="reader-range">01—02</b><i>/</i><em>78</em></span>
+          <button type="button" id="reader-next" aria-label="下一页">→</button>
+        </footer>
+      </section>
+    </main>
+    <aside class="sidebar on"><button class="navbar-toggle"></button><nav class="navbar"><div class="logo"><a href="/Almond_blog/" aria-label="Almond 首页"><span class="almond-logo-mark" aria-hidden="true">A1M0ND</span></a></div><ul class="nav nav-main"><li class="nav-item"><a class="nav-item-link" href="/Almond_blog/visual-archive/">视觉档案</a></li><li class="nav-item"><a class="nav-item-link" href="/Almond_blog/visual-archive/tech-art/">技术美术案例</a></li><li class="nav-item"><a class="nav-item-link" href="/Almond_blog/">主页</a></li></ul></nav></aside>
+  </div>
+  <script src="/Almond_blog/js/jquery-3.6.0.min.js"></script><script src="/Almond_blog/dist/main.js"></script>
+  <script>
+    (function () {
+      var total = 78, start = 0, busy = false;
+      var book = document.getElementById('reader-book');
+      var left = document.getElementById('reader-left');
+      var right = document.getElementById('reader-right');
+      var range = document.getElementById('reader-range');
+      var prev = document.getElementById('reader-prev');
+      var next = document.getElementById('reader-next');
+      var mobile = window.matchMedia('(max-width: 760px)');
+      function path(index) { return '/Almond_blog/visual-archive/photos/IMG_' + (9518 + index) + '.JPG'; }
+      function step() { return mobile.matches ? 1 : 2; }
+      function render() {
+        var size = step(), end = Math.min(start + size - 1, total - 1);
+        if (mobile.matches) {
+          left.hidden = true;
+          right.src = path(start);
+          range.textContent = String(start + 1).padStart(2, '0');
+        } else {
+          left.hidden = false;
+          left.src = path(start);
+          right.src = path(Math.min(start + 1, total - 1));
+          range.textContent = String(start + 1).padStart(2, '0') + '—' + String(end + 1).padStart(2, '0');
+        }
+        prev.disabled = start === 0;
+        next.disabled = start + size >= total;
+        [start + size, start + size + 1].forEach(function (index) { if (index < total) { var image = new Image(); image.src = path(index); } });
+      }
+      function turn(direction) {
+        var size = step(), target = start + (direction === 'next' ? size : -size);
+        if (busy || target < 0 || target >= total) return;
+        busy = true;
+        book.classList.add(direction === 'next' ? 'reader-turn-next' : 'reader-turn-prev');
+        window.setTimeout(function () { start = target; render(); }, 180);
+        window.setTimeout(function () { book.className = 'reader-book'; busy = false; }, 520);
+      }
+      prev.addEventListener('click', function () { turn('prev'); });
+      next.addEventListener('click', function () { turn('next'); });
+      document.addEventListener('keydown', function (event) { if (event.key === 'ArrowLeft') turn('prev'); if (event.key === 'ArrowRight') turn('next'); });
+      var touchX = 0;
+      book.addEventListener('touchstart', function (event) { touchX = event.changedTouches[0].clientX; }, { passive: true });
+      book.addEventListener('touchend', function (event) { var delta = event.changedTouches[0].clientX - touchX; if (Math.abs(delta) > 45) turn(delta < 0 ? 'next' : 'prev'); }, { passive: true });
+      book.addEventListener('click', function (event) { var rect = book.getBoundingClientRect(); turn(event.clientX > rect.left + rect.width / 2 ? 'next' : 'prev'); });
+      function onViewportChange() { start = Math.floor(start / step()) * step(); render(); }
+      if (mobile.addEventListener) mobile.addEventListener('change', onViewportChange); else mobile.addListener(onViewportChange);
+      render();
+    }());
+  </script>
+</body>
+</html>
