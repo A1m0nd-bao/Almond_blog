@@ -243,6 +243,7 @@
 .project-scene {
   position: relative;
   display: grid;
+  width: 100vw;
   min-height: max(62rem, 100vh);
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
@@ -251,6 +252,7 @@
   overflow: hidden;
   scroll-snap-align: start;
   isolation: isolate;
+  margin-left: calc((80rem - 100vw) / 2);
 }
 
 .project-scene:after {
@@ -493,10 +495,12 @@
 
 @media (max-width: 800px) {
   .project-scene {
+    width: 100vw;
     min-height: max(68rem, 100vh);
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 5rem 2.2rem;
+    margin-left: calc((100% - 100vw) / 2);
   }
 
   .scene-copy h3 { font-size: clamp(4rem, 15vw, 7rem); }
