@@ -222,3 +222,289 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Full-screen project chapters */
+.portfolio-showcase {
+  max-width: none;
+  padding: 0;
+}
+
+.portfolio-heading {
+  max-width: 76rem;
+  padding: 0 1.5rem;
+}
+
+.project-scenes {
+  width: 100%;
+  margin-top: 4rem;
+  scroll-snap-type: y proximity;
+}
+
+.project-scene {
+  position: relative;
+  display: grid;
+  min-height: max(62rem, 100vh);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 4rem;
+  padding: clamp(5rem, 10vw, 12rem) clamp(2rem, 10vw, 15rem);
+  overflow: hidden;
+  scroll-snap-align: start;
+  isolation: isolate;
+}
+
+.project-scene:after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,.08), transparent 70%);
+  content: '';
+  pointer-events: none;
+}
+
+.scene-copy {
+  position: relative;
+  z-index: 2;
+  max-width: 62rem;
+}
+
+.scene-number,
+.scene-type,
+.scene-footer {
+  display: block;
+  font-family: monospace;
+}
+
+.scene-number {
+  margin-bottom: 2.8rem;
+  color: rgba(255,255,255,.56);
+  font-size: 1.25rem;
+  letter-spacing: .14em;
+}
+
+.scene-type {
+  margin-bottom: 1.3rem;
+  color: rgba(255,255,255,.68);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+.scene-copy h3 {
+  margin: 0 0 2rem;
+  color: #fff;
+  font-size: clamp(4.2rem, 7vw, 9rem);
+  font-weight: 800;
+  letter-spacing: -.07em;
+  line-height: .92;
+}
+
+.scene-copy h3 em {
+  color: rgba(255,255,255,.58);
+  font-family: Georgia, serif;
+  font-weight: 400;
+}
+
+.scene-copy p {
+  max-width: 48rem;
+  margin: 0;
+  color: rgba(255,255,255,.76);
+  font-size: clamp(1.45rem, 1.8vw, 2rem);
+  line-height: 1.75;
+}
+
+.scene-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 51rem;
+  margin-top: 4.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.25);
+  color: rgba(255,255,255,.54);
+  font-size: 1.1rem;
+  letter-spacing: .04em;
+}
+
+.scene-footer a {
+  color: #fff;
+  font-family: inherit;
+  text-decoration: none;
+}
+
+.scene-footer a:hover {
+  color: #f0abfc;
+}
+
+.scene-art {
+  position: relative;
+  display: grid;
+  min-height: 45rem;
+  place-items: center;
+}
+
+.scene-art:before,
+.scene-art:after {
+  position: absolute;
+  content: '';
+}
+
+.art-word {
+  position: relative;
+  z-index: 2;
+  color: rgba(255,255,255,.9);
+  font-size: clamp(5rem, 13vw, 18rem);
+  font-weight: 900;
+  letter-spacing: -.1em;
+  line-height: .8;
+  transform: rotate(-12deg);
+}
+
+.art-orbit {
+  position: absolute;
+  width: 28rem;
+  height: 10rem;
+  border: 1px solid rgba(255,255,255,.5);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+}
+
+.orbit-one { width: 38rem; transform: rotate(24deg); }
+.orbit-two { width: 24rem; height: 24rem; border-color: rgba(240,171,252,.58); }
+.art-dot { width: 1.2rem; height: 1.2rem; border-radius: 50%; background: #f0abfc; box-shadow: 0 0 4rem 1rem #f0abfc; }
+
+.scene-art-grid {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.3rem;
+  transform: rotate(-8deg);
+}
+
+.scene-art-grid i {
+  display: block;
+  height: 15rem;
+  border: 1px solid rgba(255,255,255,.35);
+  border-radius: 1.5rem;
+  background: linear-gradient(145deg, rgba(255,255,255,.22), transparent);
+}
+
+.grid-label {
+  position: absolute;
+  z-index: 2;
+  color: #fff;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -.06em;
+  line-height: .95;
+  transform: rotate(-8deg);
+}
+
+.scene-art-stack {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  transform: rotate(7deg);
+}
+
+.scene-art-stack span {
+  display: block;
+  padding: 1.6rem 2rem;
+  border: 1px solid rgba(255,255,255,.55);
+  color: #fff;
+  font-size: clamp(2rem, 4vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -.05em;
+}
+
+.scene-art-stack span:nth-child(2) { margin-left: 4rem; background: rgba(255,255,255,.12); }
+.scene-art-stack span:nth-child(3) { margin-left: 8rem; background: rgba(255,255,255,.2); }
+.scene-art-stack span:nth-child(4) { margin-left: 12rem; background: rgba(255,255,255,.3); }
+
+.scene-art-terminal {
+  display: flex;
+  min-height: 0;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+
+.scene-art-terminal span,
+.scene-art-terminal b {
+  padding: 1.5rem;
+  border: 1px solid rgba(255,255,255,.5);
+  color: #fff;
+  font-family: monospace;
+  font-size: 1.5rem;
+}
+
+.scene-art-terminal b { border: 0; }
+
+.scene-art-story { gap: 1rem; transform: rotate(-8deg); }
+.scene-art-story span { display: grid; width: 13rem; height: 18rem; place-items: end start; padding: 1.2rem; border: 1px solid rgba(30,30,30,.22); background: rgba(255,255,255,.42); color: #28221b; font-size: 3rem; font-weight: 800; }
+.scene-art-story span:nth-child(even) { transform: translateY(3rem); background: rgba(255,255,255,.72); }
+
+.scene-art-window { border: 1px solid rgba(0,0,0,.2); border-radius: 2rem; background: #f9fff9; box-shadow: 2rem 2rem 0 rgba(255,255,255,.32); transform: rotate(5deg); }
+.scene-art-window:before { inset: 7rem 5rem; border: 1px solid rgba(0,0,0,.18); border-radius: 1rem; background: linear-gradient(160deg, #d9f7ef, #fff); }
+.scene-art-window span { position: relative; z-index: 1; color: #113d34; font-size: 5rem; font-weight: 800; letter-spacing: -.08em; line-height: .85; }
+
+.scene-art-bracket { display: flex; min-height: 0; flex-direction: column; align-items: flex-end; gap: 2rem; }
+.scene-art-bracket span { position: relative; width: 65%; padding: 1.7rem 2rem; border: 1px solid rgba(255,255,255,.6); color: #fff; font-family: monospace; font-size: 2rem; }
+.scene-art-bracket span:nth-child(2) { margin-right: 5rem; background: rgba(255,255,255,.13); }
+.scene-art-bracket span:nth-child(3) { margin-right: 10rem; background: rgba(255,255,255,.24); }
+
+.scene-art-sun { min-height: 0; }
+.scene-art-sun:before { width: 31rem; height: 31rem; border-radius: 50%; background: #ffc75d; box-shadow: 0 0 0 2rem rgba(255,199,93,.18), 0 0 0 5rem rgba(255,199,93,.09); }
+.scene-art-sun span { position: relative; z-index: 1; color: #7a3519; font-size: 8rem; font-weight: 900; letter-spacing: -.1em; transform: rotate(-12deg); }
+
+.scene-art-cross { min-height: 0; }
+.scene-art-cross span { width: 18rem; height: 18rem; border: 1px solid rgba(255,255,255,.72); transform: rotate(45deg); }
+.scene-art-cross b { position: absolute; z-index: 2; color: #fff; font-size: 8rem; font-weight: 200; }
+
+.scene-art-paper { min-height: 0; }
+.scene-art-paper:before { width: 28rem; height: 37rem; background: #28231d; box-shadow: 2rem 2rem 0 rgba(255,255,255,.16); transform: rotate(8deg); }
+.scene-art-paper span { position: relative; z-index: 1; color: #f1eadd; font-size: 5rem; font-weight: 800; letter-spacing: -.08em; line-height: .8; transform: rotate(8deg); }
+
+.scene-art-stars { min-height: 0; }
+.scene-art-stars span { position: absolute; z-index: 2; color: #fff; font-family: monospace; font-size: 7rem; }
+.scene-art-stars i { position: absolute; width: .5rem; height: .5rem; border-radius: 50%; background: #fff; box-shadow: 0 0 1.5rem .4rem #fff; }
+.scene-art-stars i:nth-child(2) { top: 20%; left: 20%; }
+.scene-art-stars i:nth-child(3) { top: 72%; left: 78%; }
+.scene-art-stars i:nth-child(4) { top: 32%; left: 78%; }
+.scene-art-stars i:nth-child(5) { top: 78%; left: 26%; }
+
+.scene-violet { background: #321b4c; }
+.scene-ink { background: #10161c; }
+.scene-coral { background: #c85e52; }
+.scene-blue { background: #1a4473; }
+.scene-yellow { background: #d7a54f; }
+.scene-mint { background: #76bda7; }
+.scene-red { background: #8f2638; }
+.scene-orange { background: #c96527; }
+.scene-lilac { background: #8f80b9; }
+.scene-paper { background: #b8a58d; }
+.scene-night { background: #141825; }
+
+.project-scenes + .portfolio-grid {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .project-scene {
+    min-height: max(68rem, 100vh);
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 5rem 2.2rem;
+  }
+
+  .scene-copy h3 { font-size: clamp(4rem, 15vw, 7rem); }
+  .scene-copy p { font-size: 1.45rem; }
+  .scene-footer { align-items: flex-start; flex-direction: column; margin-top: 2.5rem; }
+  .scene-art { min-height: 25rem; }
+  .scene-art-grid i { height: 9rem; }
+  .scene-art-stack span:nth-child(2) { margin-left: 2rem; }
+  .scene-art-stack span:nth-child(3) { margin-left: 4rem; }
+  .scene-art-stack span:nth-child(4) { margin-left: 6rem; }
+}
