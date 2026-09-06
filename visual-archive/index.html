@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>视觉档案 · Almond</title>
+  <link rel="icon" type="image/svg+xml" href="/Almond_blog/images/almond-mark.svg?v=2">
+  <link rel="stylesheet" href="/Almond_blog/dist/main.css">
+  <link rel="stylesheet" href="/Almond_blog/css/fonts/remixicon.css">
+  <link rel="stylesheet" href="/Almond_blog/css/custom.css?v=archive-1">
+</head>
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="archive-main">
+        <header class="archive-hero">
+          <p class="archive-eyebrow">VISUAL ARCHIVE · 02 CATEGORIES</p>
+          <h1>把看见的，<br><em>留下来。</em></h1>
+          <p class="archive-intro">这里会收录我的摄影作品，以及作为技术美术参与过的案例视频。暂时先把展览空间搭好，之后再让每一件作品慢慢进入它自己的位置。</p>
+          <div class="archive-meta"><span>PHOTOGRAPHY</span><span>TECH ART CASES</span><span>COMING SOON</span></div>
+        </header>
+
+        <nav class="archive-filter" aria-label="作品筛选">
+          <button class="is-active" data-filter="all">全部 / ALL</button>
+          <button data-filter="photo">摄影 / PHOTO</button>
+          <button data-filter="video">技术美术 / TECH ART</button>
+        </nav>
+
+        <div class="archive-grid">
+          <article class="archive-card archive-card-photo" data-kind="photo">
+            <div class="archive-card-media media-photo-01"><span>PHOTO<br>01</span><i>等待作品上传</i></div>
+            <div class="archive-card-info"><span class="archive-card-index">01 / PHOTO</span><h2>光线与空间</h2><p>城市、室内与自然光的观察记录。</p></div>
+          </article>
+          <article class="archive-card archive-card-photo" data-kind="photo">
+            <div class="archive-card-media media-photo-02"><span>PHOTO<br>02</span><i>等待作品上传</i></div>
+            <div class="archive-card-info"><span class="archive-card-index">02 / PHOTO</span><h2>行走中的片段</h2><p>旅途中被偶然捕捉到的瞬间和质感。</p></div>
+          </article>
+          <article class="archive-card archive-card-video" data-kind="video">
+            <div class="archive-card-media media-video-01"><span class="archive-play">▶</span><b>CASE<br>VIDEO 01</b><i>等待案例视频</i></div>
+            <div class="archive-card-info"><span class="archive-card-index">01 / TECH ART</span><h2>角色与运行时</h2><p>Live2D、角色表现与技术美术流程案例。</p></div>
+          </article>
+          <article class="archive-card archive-card-video" data-kind="video">
+            <div class="archive-card-media media-video-02"><span class="archive-play">▶</span><b>CASE<br>VIDEO 02</b><i>等待案例视频</i></div>
+            <div class="archive-card-info"><span class="archive-card-index">02 / TECH ART</span><h2>工具让创作继续</h2><p>工具链、自动化和交互效果的案例记录。</p></div>
+          </article>
+        </div>
+
+        <section class="archive-upload-note">
+          <span class="archive-upload-icon">＋</span>
+          <div><span class="archive-eyebrow">NEXT UPDATE</span><h2>等你把作品放进来</h2><p>上传照片、视频或项目说明后，我可以继续帮你补齐封面、标签、播放页和每个案例的叙事结构。</p></div>
+        </section>
+      </section>
+    </main>
+
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+      <nav class="navbar">
+        <div class="logo"><a href="/Almond_blog/" aria-label="Almond 首页"><span class="almond-logo-mark" aria-hidden="true">A1M0ND</span></a></div>
+        <ul class="nav nav-main">
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/">主页</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/archives">归档</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/categories">分类</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/tags">标签</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/#projects">作品集</a></li>
+          <li class="nav-item"><a class="nav-item-link" href="/Almond_blog/visual-archive/">视觉档案</a></li>
+          <li class="nav-item"><a class="nav-item-link" target="_blank" rel="noopener" href="https://github.com/A1m0nd-bao">GitHub</a></li>
+        </ul>
+      </nav>
+      <nav class="navbar navbar-bottom"><ul class="nav"><li class="nav-item"><a class="nav-item-link" target="_blank" href="/Almond_blog/atom.xml" title="RSS Feed"><i class="ri-rss-line"></i></a></li></ul></nav>
+    </aside>
+  </div>
+
+  <script src="/Almond_blog/js/jquery-3.6.0.min.js"></script>
+  <script src="/Almond_blog/dist/main.js"></script>
+  <script>
+    (function () {
+      var buttons = document.querySelectorAll('.archive-filter button');
+      var cards = document.querySelectorAll('.archive-card');
+      buttons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          buttons.forEach(function (item) { item.classList.remove('is-active'); });
+          button.classList.add('is-active');
+          var filter = button.dataset.filter;
+          cards.forEach(function (card) {
+            card.classList.toggle('is-hidden', filter !== 'all' && card.dataset.kind !== filter);
+          });
+        });
+      });
+    }());
+  </script>
+</body>
+</html>
