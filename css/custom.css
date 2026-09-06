@@ -5,6 +5,33 @@
 .sidebar.on {
   left: 0;
 }
+.logo .almond-logo-mark {
+  display: inline-grid;
+  width: 4.2rem;
+  height: 4.2rem;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.42);
+  border-radius: 1.2rem;
+  background: linear-gradient(145deg, #f0abfc 0%, #8b5cf6 58%, #321b4c 100%);
+  box-shadow: 0 .8rem 2rem rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.42);
+  color: #fff;
+  font-family: Georgia, serif;
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -.15em;
+  line-height: 1;
+  transform: rotate(-8deg);
+  transition: transform .45s cubic-bezier(.2,.75,.2,1), box-shadow .45s ease;
+}
+.logo .almond-logo-mark span {
+  color: #ffe8ff;
+  font-size: 1.8rem;
+  transform: translate(.12rem, .55rem);
+}
+.logo a:hover .almond-logo-mark {
+  box-shadow: 0 1rem 2.6rem rgba(139,92,246,.42), inset 0 1px 0 rgba(255,255,255,.55);
+  transform: rotate(0deg) translateY(-.2rem) scale(1.05);
+}
 .content.on {
   margin-left: 0 !important;
 }
